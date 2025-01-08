@@ -3,6 +3,14 @@
 from time import sleep
 from adafruit_servokit import ServoKit
 
+def decrement(idx):
+    for i in range (6):
+        if i != idx:
+            if i < 3:
+                coxa[i] = coxa[i] - 5
+            else:
+                coxa[i] = coxa[i] + 5
+
 waktu_sleep = 2
 
 kit1 = ServoKit(channels = 16, address = 0x41)
@@ -21,15 +29,24 @@ kit2.servo[15].angle = 95 #tibia4
 kit2.servo[12].angle = 55 #tibia5
 
 sleep(5)
+coxa = [0,0,0,0,0,0]
+coxa[0] = 120
+coxa[1] = 120
+coxa[2] = 100
+coxa[3] = 80
+coxa[4] = 60
+coxa[5] = 60
 
-kit1.servo[8].angle =  120 #coxa1
-kit2.servo[7].angle =  60 #coxa6
+kit1.servo[8].angle =  coxa[0] #coxa1
+kit2.servo[7].angle =  coxa[5] #coxa6
 
-kit1.servo[5].angle = 120 #coxa2
-kit2.servo[10].angle =  60 #coxa5
+kit1.servo[5].angle = coxa[1] #coxa2
+kit2.servo[10].angle =  coxa[4] #coxa5
 
-kit1.servo[2].angle = 100 #coxa3
-kit2.servo[13].angle = 80 #coxa4
+kit1.servo[2].angle = coxa[2] #coxa3
+kit2.servo[13].angle = coxa[3] #coxa4
+
+
 print("Mundur")
 sleep(waktu_sleep)
 
@@ -43,14 +60,16 @@ sleep(waktu_sleep)
 try:
     while True:
         #coxa 1 maju sisanya mundur 5 derajat
-        kit1.servo[8].angle = 120 #coxa1
-        kit2.servo[7].angle = 65 #coxa6
+	coxa[0] = 120
+	decrement(0)
+        kit1.servo[8].angle = coxa[0] #coxa1
+        kit2.servo[7].angle = coxa[5] #coxa6
 
-        kit1.servo[5].angle = 115 #coxa2
-        kit2.servo[10].angle = 65 #coxa5
+        kit1.servo[5].angle = coxa[1] #coxa2
+        kit2.servo[10].angle = coxa[4] #coxa5
 
-        kit1.servo[2].angle = 95 #coxa3
-        kit2.servo[13].angle = 85 #coxa4
+        kit1.servo[2].angle = coxa[2] #coxa3
+        kit2.servo[13].angle = coxa[3] #coxa4
         print("Coxa 1 Maju 30 Derajat dari posisi berdiri, sisanya mundur 5 Derajat")
         sleep(waktu_sleep)
 
@@ -69,14 +88,16 @@ try:
 	sleep(waktu_sleep)
 
         #coxa 2 maju sisanya mundur 5 derajat
-        kit1.servo[8].angle = 115 #coxa1
-        kit2.servo[7].angle = 70 #coxa6
+        coxa[1] = 120
+	decrement(1)
+        kit1.servo[8].angle = coxa[0] #coxa1
+        kit2.servo[7].angle = coxa[5] #coxa6
 
-        kit1.servo[5].angle = 120 #coxa2
-        kit2.servo[10].angle = 70 #coxa5
+        kit1.servo[5].angle = coxa[1] #coxa2
+        kit2.servo[10].angle = coxa[4] #coxa5
 
-        kit1.servo[2].angle = 90 #coxa3
-        kit2.servo[13].angle = 90 #coxa4
+        kit1.servo[2].angle = coxa[2] #coxa3
+        kit2.servo[13].angle = coxa[3] #coxa4
         print("Coxa 2 Maju 30 Derajat dari posisi berdiri, sisanya mundur 5 Derajat")
         sleep(waktu_sleep)
 
@@ -92,14 +113,16 @@ try:
         kit1.servo[0].angle = 120 #tibia3
 
  	#coxa 3 maju sisanya mundur 5 derajat
-        kit1.servo[8].angle = 110 #coxa1
-        kit2.servo[7].angle = 75 #coxa6
+        coxa[2] = 100
+	decrement(2)
+        kit1.servo[8].angle = coxa[0] #coxa1
+        kit2.servo[7].angle = coxa[5] #coxa6
 
-        kit1.servo[5].angle = 115 #coxa2
-        kit2.servo[10].angle = 75 #coxa5
+        kit1.servo[5].angle = coxa[1] #coxa2
+        kit2.servo[10].angle = coxa[4] #coxa5
 
-        kit1.servo[2].angle = 100 #coxa3
-        kit2.servo[13].angle = 95 #coxa4
+        kit1.servo[2].angle = coxa[2] #coxa3
+        kit2.servo[13].angle = coxa[3] #coxa4
         print("Coxa 3 Maju 30 Derajat dari posisi berdiri, sisanya mundur 5 Derajat")
         sleep(waktu_sleep)
 
@@ -117,14 +140,16 @@ try:
         sleep(waktu_sleep)
 
 	#coxa 4 maju sisanya mundur 5 derajat
-        kit1.servo[8].angle = 105 #coxa1
-        kit2.servo[7].angle = 80 #coxa6
+        coxa[3] = 80
+	decrement(3)
+        kit1.servo[8].angle = coxa[0] #coxa1
+        kit2.servo[7].angle = coxa[5] #coxa6
 
-        kit1.servo[5].angle = 110 #coxa2
-        kit2.servo[10].angle = 80 #coxa5
+        kit1.servo[5].angle = coxa[1] #coxa2
+        kit2.servo[10].angle = coxa[4] #coxa5
 
-        kit1.servo[2].angle = 95 #coxa3
-        kit2.servo[13].angle = 80 #coxa4
+        kit1.servo[2].angle = coxa[2] #coxa3
+        kit2.servo[13].angle = coxa[3] #coxa4
         print("Coxa 4 Maju 30 Derajat dari posisi berdiri, sisanya mundur 5 Derajat")
         sleep(waktu_sleep)
 	    
@@ -142,14 +167,16 @@ try:
 	sleep(waktu_sleep)
 
 	#coxa 5 maju sisanya mundur 5 derajat
-        kit1.servo[8].angle = 100 #coxa1
-        kit2.servo[7].angle = 85 #coxa6
+        coxa[4] = 60
+	decrement(4)
+        kit1.servo[8].angle = coxa[0] #coxa1
+        kit2.servo[7].angle = coxa[5] #coxa6
 
-        kit1.servo[5].angle = 105 #coxa2
-        kit2.servo[10].angle = 60 #coxa5
+        kit1.servo[5].angle = coxa[1] #coxa2
+        kit2.servo[10].angle = coxa[4] #coxa5
 
-        kit1.servo[2].angle = 90 #coxa3
-        kit2.servo[13].angle = 85 #coxa4
+        kit1.servo[2].angle = coxa[2] #coxa3
+        kit2.servo[13].angle = coxa[3] #coxa4
         print("Coxa 5 Maju 30 Derajat dari posisi berdiri, sisanya mundur 5 Derajat")
         sleep(waktu_sleep)
 	    
@@ -167,14 +194,16 @@ try:
         sleep(waktu_sleep)
 
 	#coxa 6 maju sisanya mundur 5 derajat
-        kit1.servo[8].angle = 95 #coxa1
-        kit2.servo[7].angle = 60 #coxa6
+        coxa[5] = 60
+	decrement(5)
+        kit1.servo[8].angle = coxa[0] #coxa1
+        kit2.servo[7].angle = coxa[5] #coxa6
 
-        kit1.servo[5].angle = 100 #coxa2
-        kit2.servo[10].angle = 65 #coxa5
+        kit1.servo[5].angle = coxa[1] #coxa2
+        kit2.servo[10].angle = coxa[4] #coxa5
 
-        kit1.servo[2].angle = 85 #coxa3
-        kit2.servo[13].angle = 90 #coxa4
+        kit1.servo[2].angle = coxa[2] #coxa3
+        kit2.servo[13].angle = coxa[3] #coxa4
         print("Coxa 6 Maju 30 Derajat dari posisi berdiri, sisanya mundur 5 Derajat")
         sleep(waktu_sleep)
 	    
