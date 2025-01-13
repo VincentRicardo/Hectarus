@@ -1,3 +1,4 @@
+#update: penurunan kaki nya dibikin for loop biar ga terlalu ngebanting (dari yang ke dua)
 from time import sleep
 from adafruit_servokit import ServoKit
 
