@@ -1,3 +1,4 @@
+#update: pas ngangkat tibianya nutup biar ga nabrak tembok
 from time import sleep
 from adafruit_servokit import ServoKit
 
