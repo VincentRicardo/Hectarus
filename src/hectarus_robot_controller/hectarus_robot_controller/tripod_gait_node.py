@@ -20,7 +20,7 @@ def wait(waktu):
         elif currentTime - myTime >= waktu:
             flag = False
 
-delay = 1
+delay = 0.2
 
 class MyNode(Node):
     def __init__(self):
@@ -29,17 +29,17 @@ class MyNode(Node):
 
     def move(self, message = Int32MultiArray):
         #femur 1 3 5 ngangkat
-        kit1.servo[7].angle = 170 #femur1
-        kit1.servo[6].angle = 180 #tibia1
-        kit1.servo[1].angle = 170 #femur3
-        kit1.servo[0].angle = 180 #tibia3
-        kit2.servo[11].angle = 10 #femur5
-        kit2.servo[12].angle = 0 #tibia5
+        kit1.servo[7].angle = message.data[11+9] + 45 #femur1
+        kit1.servo[6].angle = 180 - message.data[12+9] + 45 #tibia1
+        kit1.servo[1].angle = message.data[13+9] + 45 #femur3
+        kit1.servo[0].angle = 180 - message.data[14+9] + 45 #tibia3
+        kit2.servo[11].angle = 180 - message.data[9+9] - 45 #femur5
+        kit2.servo[12].angle = message.data[10+9] - 45 #tibia5
         wait(delay)
 
         #coxa 1 3 5 maju
         kit1.servo[8].angle = 90 + message.data[3] #coxa1
-        kit1.servo[2].angle = 90 + message.data[6] #coxa3
+        kit1.servo[2].angle = 90 - message.data[15+9] + message.data[6] #coxa3
         kit2.servo[10].angle = 90 - message.data[0+9] #coxa5
         wait(delay)
         
@@ -59,7 +59,7 @@ class MyNode(Node):
         kit1.servo[7].angle = message.data[11+9] #femur1
         kit1.servo[6].angle = 180 - message.data[12+9] #tibia1
 
-        kit1.servo[2].angle = 90 #coxa3
+        kit1.servo[2].angle = 90 - message.data[15+9] #coxa3
         kit1.servo[1].angle = message.data[13+9] #femur3
         kit1.servo[0].angle = 180 - message.data[14+9] #tibia3
 
@@ -69,17 +69,17 @@ class MyNode(Node):
 
         wait(0.02)
         #femur 2 4 6 ngangkat
-        kit1.servo[4].angle = 170 #femur2
-        kit1.servo[3].angle = 180 #tibia2
-        kit2.servo[14].angle = 10 #femur4
-        kit2.servo[15].angle = 0 #tibia4
-        kit2.servo[8].angle = 10 #femur6
-        kit2.servo[9].angle = 0 #tibia6
+        kit1.servo[4].angle = message.data[9+9] + 45 #femur2
+        kit1.servo[3].angle = 180 - message.data[10+9] + 45 #tibia2
+        kit2.servo[14].angle = 180 - message.data[13+9] - 45 #femur4
+        kit2.servo[15].angle = message.data[14+9] - 45 #tibia4
+        kit2.servo[8].angle = 180 - message.data[11+9] - 45 #femur6
+        kit2.servo[9].angle =  message.data[12+9] - 45 #tibia6
         wait(delay)
 
         #coxa 2 4 6 maju
         kit1.servo[5].angle = 90 + message.data[0] #coxa2
-        kit2.servo[13].angle = 90 - message.data[6+9] #coxa4
+        kit2.servo[13].angle = 90 + message.data[15+9] - message.data[6+9] #coxa4
         kit2.servo[7].angle = 90 - message.data[3+9] #coxa6
         wait(delay)
 
@@ -98,7 +98,7 @@ class MyNode(Node):
         kit1.servo[4].angle = message.data[9+9] #femur2
         kit1.servo[3].angle = 180 -message.data[10+9] #tibia2
 
-        kit2.servo[13].angle = 90 #coxa4
+        kit2.servo[13].angle = 90 + message.data[15+9] #coxa4
         kit2.servo[14].angle = 180 - message.data[13+9] #femur4
         kit2.servo[15].angle = message.data[14+9] #tibia4
 

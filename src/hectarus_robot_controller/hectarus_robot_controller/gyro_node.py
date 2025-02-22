@@ -387,7 +387,7 @@ class MyNode(Node):
 
         self.subscriber_trigger = self.create_subscription(Int32, "/state_", self.getting_data, 1)
 
-        self.timer_ = self.create_timer(0.1, self.ngitung_gyro)
+        self.timer_ = self.create_timer(0.04, self.ngitung_gyro)
 
         self.measurement = 0
         self.yaw = 0

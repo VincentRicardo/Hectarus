@@ -33,11 +33,11 @@ class MyNode(Node):
         rows = message.layout.dim[0].size
         cols = message.layout.dim[1].size
         data = np.array(message.data).reshape(rows, cols)
-        #self.get_logger().info(f'Received 2D array:\n{data}')
+        self.get_logger().info(f'Received 2D array:\n{data}')
 
         #femur 1 angkat
-        kit1.servo[7].angle = 170 #femur1
-        kit1.servo[6].angle = 180 #tibia1
+        kit1.servo[7].angle = data[6][4] + 45 #femur1
+        kit1.servo[6].angle = 180 - data[6][5] + 45 #tibia1
         wait(delay)
 
         #coxa 1 maju sisanya mundur
@@ -71,8 +71,8 @@ class MyNode(Node):
         wait(delay)
 
         #femur 2 angkat
-        kit1.servo[4].angle = 170 #femur2
-        kit1.servo[3].angle = 180 #tibia2
+        kit1.servo[4].angle = data[6][1] + 45 #femur2
+        kit1.servo[3].angle = 180 - data[6][2] + 45 #tibia2
         wait(delay)
 
         #coxa 2 maju sisanya mundur
@@ -105,8 +105,8 @@ class MyNode(Node):
         wait(delay)
 
         #femur tibia 3 naik
-        kit1.servo[1].angle = 170 #femur3
-        kit1.servo[0].angle = 180 #tibia3
+        kit1.servo[1].angle = data[6][7] + 45 #femur3
+        kit1.servo[0].angle = 180 - data[6][8] + 45 #tibia3
         wait(delay)
 
  	#coxa 3 maju sisanya mundur 5 derajat
@@ -140,8 +140,8 @@ class MyNode(Node):
         wait(delay)
 
 	#femur 4 angkat
-        kit2.servo[14].angle = 10 #femur4
-        kit2.servo[15].angle = 0 #tibia4
+        kit2.servo[14].angle = 180 - data[6][7] - 45 #femur4
+        kit2.servo[15].angle = data[6][8] - 45 #tibia4
         wait(delay)
 
 	#coxa 4 maju sisanya mundur 5 derajat
@@ -175,8 +175,8 @@ class MyNode(Node):
         wait(delay)
 
 	#femur 5 angkat
-        kit2.servo[11].angle = 10 #femur5
-        kit2.servo[12].angle = 0 #tibia5
+        kit2.servo[11].angle = 180 - data[6][1] - 45 #femur5
+        kit2.servo[12].angle = data[6][2] - 45 #tibia5
         wait(delay)
 
 	#coxa 5 maju sisanya mundur 5 derajat
@@ -210,8 +210,8 @@ class MyNode(Node):
         wait(delay)
 
 	#femur 6 angkat
-        kit2.servo[8].angle = 10 #femur6
-        kit2.servo[9].angle = 0 #tibia6
+        kit2.servo[8].angle = 180 - data[6][4] - 45 #femur6
+        kit2.servo[9].angle = data[6][5] - 45 #tibia6
         wait(delay)
 
 	#coxa 6 maju sisanya mundur 5 derajat
