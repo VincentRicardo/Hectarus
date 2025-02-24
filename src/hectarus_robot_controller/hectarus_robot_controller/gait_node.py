@@ -13,7 +13,7 @@ tibia = 8.122
 l = 6.436
 maju = 3.8
 forward = maju
-gait = 1
+gait = 2
 #0 tripod, 1 wave, 2 tetrapod
 
 lebar_depan_belakang = 24.5
@@ -93,15 +93,19 @@ class MyNode(Node):
         self.publish_stop_angle = self.create_publisher(Int32MultiArray, "/stop_angle_", 1)
         self.roll = 0
         self.mundur = 0
+        self.temp = 0
 
     def move(self, message = Int32MultiArray):
         self.get_logger().info("Receiving Yaw = " + str(message.data[0])+ " & Roll = " + str(message.data[1]) + ", & State = " + str(message.data[2]))
         #self.roll = self.roll + message.data[1]
         #self.roll = max(-13, min(self.roll, 9))
-        if self.roll == -13:
+        self.temp = self.temp + message.data[1]
+        if self.temp <= -13:
             self.mundur = 10
-        else:
-            self.mundur = 0
+            self.roll = -13
+        #else:
+        #    self.mundur = 0
+            
         self.get_logger().info("Nilai Roll Clamp = " + str(self.roll))
         base_coxa_tengah_berdiri, coxa_femur_tengah_berdiri, femur_tibia_tengah_berdiri = IK_tengah(0,0,panjang_depan_tengah,self.roll, 0)
         base_coxa_depan_berdiri, coxa_femur_depan_berdiri, femur_tibia_depan_berdiri = IK_depan(0,0, panjang_depan_belakang, self.roll, 0)
@@ -189,7 +193,7 @@ class MyNode(Node):
                     coxa_femur_depan_kiri = coxa_femur_depan_kiri - coxa_femur_depan_berdiri
                     femur_tibia_depan_kiri = femur_tibia_depan_kiri - femur_tibia_depan_berdiri
 
-                    base_coxa_belakang_kiri, coxa_femur_belakang_kiri, femur_tibia_belakang_kiri = IK_belakang(step_wave[0],(yaw), panjang_depan_belakang, self.roll, self.roll)
+                    base_coxa_belakang_kiri, coxa_femur_belakang_kiri, femur_tibia_belakang_kiri = IK_belakang(step_wave[0],(yaw), panjang_depan_belakang, self.roll, self.roll, self.mundur)
                     base_coxa_belakang_kiri = base_coxa_belakang_kiri - base_coxa_belakang_berdiri
                     coxa_femur_belakang_kiri = coxa_femur_belakang_kiri - coxa_femur_belakang_berdiri
                     femur_tibia_belakang_kiri = femur_tibia_belakang_kiri - femur_tibia_belakang_berdiri
@@ -204,7 +208,7 @@ class MyNode(Node):
                     coxa_femur_depan_kanan = coxa_femur_depan_kanan - coxa_femur_depan_berdiri
                     femur_tibia_depan_kanan = femur_tibia_depan_kanan - femur_tibia_depan_berdiri
 
-                    base_coxa_belakang_kanan, coxa_femur_belakang_kanan, femur_tibia_belakang_kanan = IK_belakang(step_wave[2],((-yaw)), panjang_depan_belakang, self.roll, self.roll)
+                    base_coxa_belakang_kanan, coxa_femur_belakang_kanan, femur_tibia_belakang_kanan = IK_belakang(step_wave[2],((-yaw)), panjang_depan_belakang, self.roll, self.roll, self.mundur)
                     base_coxa_belakang_kanan = base_coxa_belakang_kanan - base_coxa_belakang_berdiri
                     coxa_femur_belakang_kanan = coxa_femur_belakang_kanan - coxa_femur_belakang_berdiri
                     femur_tibia_belakang_kanan = femur_tibia_belakang_kanan - femur_tibia_belakang_berdiri
@@ -213,7 +217,7 @@ class MyNode(Node):
 
                     for i in range (4):
                         step_wave[i] = step_wave[i] - decrement_wave[i]
-                angle_temp[6] = [int(base_coxa_tengah_berdiri), int(coxa_femur_tengah_berdiri+35), int(femur_tibia_tengah_berdiri-45), int(base_coxa_depan_berdiri), int(coxa_femur_depan_berdiri+35), int(femur_tibia_depan_berdiri-45), int(base_coxa_belakang_berdiri), int(coxa_femur_belakang_berdiri+35), int(femur_tibia_belakang_berdiri-45), 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                angle_temp[6] = [int(base_coxa_tengah_berdiri), int(coxa_femur_tengah_berdiri+35), int(femur_tibia_tengah_berdiri-45), int(base_coxa_depan_berdiri), int(coxa_femur_depan_berdiri+35), int(femur_tibia_depan_berdiri-45), int(base_coxa_belakang_berdiri), int(coxa_femur_belakang_berdiri+35), int(femur_tibia_belakang_berdiri-45), self.mundur, 0, 0, 0, 0, 0, 0, 0, 0]
                 angle.data = angle_temp.flatten().tolist()
                 angle.layout.dim.append(MultiArrayDimension(label="rows", size=7, stride=7*18))
                 angle.layout.dim.append(MultiArrayDimension(label="cols", size=18, stride=18))
@@ -239,7 +243,7 @@ class MyNode(Node):
                     coxa_femur_depan_kiri = coxa_femur_depan_kiri - coxa_femur_depan_berdiri
                     femur_tibia_depan_kiri = femur_tibia_depan_kiri - femur_tibia_depan_berdiri
 
-                    base_coxa_belakang_kiri, coxa_femur_belakang_kiri, femur_tibia_belakang_kiri = IK_belakang(step_tetrapod[0],(yaw), panjang_depan_belakang, self.roll, self.roll)
+                    base_coxa_belakang_kiri, coxa_femur_belakang_kiri, femur_tibia_belakang_kiri = IK_belakang(step_tetrapod[0],(yaw), panjang_depan_belakang, self.roll, self.roll, self.mundur)
                     base_coxa_belakang_kiri = base_coxa_belakang_kiri - base_coxa_belakang_berdiri
                     coxa_femur_belakang_kiri = coxa_femur_belakang_kiri - coxa_femur_belakang_berdiri
                     femur_tibia_belakang_kiri = femur_tibia_belakang_kiri - femur_tibia_belakang_berdiri
@@ -254,7 +258,7 @@ class MyNode(Node):
                     coxa_femur_depan_kanan = coxa_femur_depan_kanan - coxa_femur_depan_berdiri
                     femur_tibia_depan_kanan = femur_tibia_depan_kanan - femur_tibia_depan_berdiri
 
-                    base_coxa_belakang_kanan, coxa_femur_belakang_kanan, femur_tibia_belakang_kanan = IK_belakang(step_tetrapod[2],((-yaw)), panjang_depan_belakang, self.roll, self.roll)
+                    base_coxa_belakang_kanan, coxa_femur_belakang_kanan, femur_tibia_belakang_kanan = IK_belakang(step_tetrapod[2],((-yaw)), panjang_depan_belakang, self.roll, self.roll, self.mundur)
                     base_coxa_belakang_kanan = base_coxa_belakang_kanan - base_coxa_belakang_berdiri
                     coxa_femur_belakang_kanan = coxa_femur_belakang_kanan - coxa_femur_belakang_berdiri
                     femur_tibia_belakang_kanan = femur_tibia_belakang_kanan - femur_tibia_belakang_berdiri
@@ -264,7 +268,7 @@ class MyNode(Node):
 
                     for i in range (4):
                         step_tetrapod[i] = step_tetrapod[i] - decrement_tetrapod[i]
-                angle_temp[3] = [int(base_coxa_tengah_berdiri), int(coxa_femur_tengah_berdiri+35), int(femur_tibia_tengah_berdiri-45), int(base_coxa_depan_berdiri), int(coxa_femur_depan_berdiri+35), int(femur_tibia_depan_berdiri-45), int(base_coxa_belakang_berdiri), int(coxa_femur_belakang_berdiri+35), int(femur_tibia_belakang_berdiri-45), 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                angle_temp[3] = [int(base_coxa_tengah_berdiri), int(coxa_femur_tengah_berdiri+35), int(femur_tibia_tengah_berdiri-45), int(base_coxa_depan_berdiri), int(coxa_femur_depan_berdiri+35), int(femur_tibia_depan_berdiri-45), int(base_coxa_belakang_berdiri), int(coxa_femur_belakang_berdiri+35), int(femur_tibia_belakang_berdiri-45), self.mundur, 0, 0, 0, 0, 0, 0, 0, 0]
                 angle.data = angle_temp.flatten().tolist()
                 angle.layout.dim.append(MultiArrayDimension(label="rows", size=4, stride=4*18))
                 angle.layout.dim.append(MultiArrayDimension(label="cols", size=18, stride=18))
