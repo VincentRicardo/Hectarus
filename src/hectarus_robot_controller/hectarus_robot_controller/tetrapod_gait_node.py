@@ -11,7 +11,7 @@ import numpy as np
 kit1 = ServoKit(channels=16, address=0x41)
 kit2 = ServoKit(channels=16, address=0x40)
 
-delay = 0.6
+delay = 0.2
 
 def wait(waktu):
     flag = True

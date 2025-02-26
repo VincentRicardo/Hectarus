@@ -13,7 +13,7 @@ tibia = 8.122
 l = 6.436
 maju = 3.8
 forward = maju
-gait = 2
+gait = 0
 #0 tripod, 1 wave, 2 tetrapod
 
 lebar_depan_belakang = 24.5
@@ -22,19 +22,19 @@ lebar_tengah = 33.5
 panjang_depan_belakang = 23.3
 panjang_depan_tengah = 13
 
-def nilai_h(panjang, derajat, maju, derajat_naik_maju):
+def nilai_h(panjang, derajat, maju, derajat_naik_maju, kurang_tinggi):
     #alpha1 = math.asin(l/femur)
     #if derajat != 0:
     #    alpha1 = math.radians(180) - alpha1
     #h = math.sqrt(math.pow(femur,2)+math.pow(tibia,2)-(2*femur*tibia*math.cos(alpha1))-(math.sin(alpha1)*math.sin(alpha1)*femur*femur)) 
-    h = tibia + (math.tan(math.radians(derajat))*panjang)  #- (math.tan(math.radians(derajat_naik_maju)*maju))
+    h = tibia + (math.tan(math.radians(derajat))*panjang) - kurang_tinggi #- (math.tan(math.radians(derajat_naik_maju)*maju))
     alpha1 = math.acos(((femur*tibia)-(math.sqrt((math.pow(femur,2)*math.pow(tibia,2))+(math.pow(femur,2)*(math.pow(h,2)-math.pow(tibia,2))))))/math.pow(femur,2))
     l = math.sin(alpha1)*femur
     return h, l
 
 
 def IK_tengah(maju, yaw, panjang, roll, derajat_naik_maju):
-    h,l = nilai_h(panjang, abs(roll), maju, derajat_naik_maju)
+    h,l = nilai_h(panjang, abs(roll), maju, derajat_naik_maju, 0)
     P = math.sqrt(math.pow(maju,2)+math.pow((l+coxa),2)-(2*maju*(l+coxa)*math.cos(math.radians(90-(yaw))))) #panjang diagonal setelah kaki maju
     sudut_base_coxa_tengah = math.degrees(math.acos((math.pow((l+coxa),2)+math.pow(P,2)-math.pow(maju,2))/(2*(l+coxa)*P)))
     P = P-coxa
@@ -46,8 +46,8 @@ def IK_tengah(maju, yaw, panjang, roll, derajat_naik_maju):
     sudut_femur_tibia_tengah = math.degrees(math.acos((math.pow(femur,2)+math.pow(tibia,2)-math.pow(M,2))/(2*tibia*femur)))
     return (sudut_base_coxa_tengah, sudut_coxa_femur_total, sudut_femur_tibia_tengah)
 
-def IK_depan(maju,yaw, panjang, roll, derajat_naik_maju):
-    h,l = nilai_h(panjang, max(roll, 0), maju, derajat_naik_maju)
+def IK_depan(maju,yaw, panjang, roll, derajat_naik_maju, kurang_tinggi):
+    h,l = nilai_h(panjang, max(roll, 0), maju, derajat_naik_maju, kurang_tinggi)
     PD = math.sqrt(math.pow(maju,2)+math.pow((l+coxa),2)-(2*maju*(l+coxa)*math.cos(math.radians(135-(yaw)))))
     sudut_base_coxa_depan = math.degrees(math.acos((math.pow((l+coxa),2)+math.pow(PD,2)-math.pow(maju,2))/(2*(l+coxa)*PD)))
     PD = PD-coxa
@@ -59,7 +59,7 @@ def IK_depan(maju,yaw, panjang, roll, derajat_naik_maju):
     return(sudut_base_coxa_depan, sudut_coxa_femur_total_depan, sudut_femur_tibia_depan)
 
 def IK_belakang(maju,yaw, panjang, roll, derajat_naik_maju, mundur):
-    h,l = nilai_h(panjang, -min(roll, 0), maju, derajat_naik_maju)
+    h,l = nilai_h(panjang, -min(roll, 0), maju, derajat_naik_maju, 0)
     PB = math.sqrt(math.pow(maju,2)+math.pow((l+coxa),2)-(2*maju*(l+coxa)*math.cos(math.radians(90-mundur-45-(yaw)))))
     sudut_base_coxa_belakang = math.degrees(math.acos((math.pow((l+coxa),2)+math.pow(PB,2)-math.pow(maju,2))/(2*(l+coxa)*PB)))
     PB = PB - coxa
@@ -94,21 +94,28 @@ class MyNode(Node):
         self.roll = 0
         self.mundur = 0
         self.temp = 0
+        self.flag = 1
+        self.kurang_tinggi = 0
 
     def move(self, message = Int32MultiArray):
         self.get_logger().info("Receiving Yaw = " + str(message.data[0])+ " & Roll = " + str(message.data[1]) + ", & State = " + str(message.data[2]))
         #self.roll = self.roll + message.data[1]
         #self.roll = max(-13, min(self.roll, 9))
         self.temp = self.temp + message.data[1]
-        if self.temp <= -13:
+        if self.temp <= -20:
             self.mundur = 10
             self.roll = -13
-        #else:
-        #    self.mundur = 0
-            
+            self.flag = 0
+            self.kurang_tinggi = 2
+        if self.temp >= 15:
+            self.mundur = 0
+            self.roll = 0
+            self.flag = 1
+            self.kurang_tinggi = 0
+
         self.get_logger().info("Nilai Roll Clamp = " + str(self.roll))
         base_coxa_tengah_berdiri, coxa_femur_tengah_berdiri, femur_tibia_tengah_berdiri = IK_tengah(0,0,panjang_depan_tengah,self.roll, 0)
-        base_coxa_depan_berdiri, coxa_femur_depan_berdiri, femur_tibia_depan_berdiri = IK_depan(0,0, panjang_depan_belakang, self.roll, 0)
+        base_coxa_depan_berdiri, coxa_femur_depan_berdiri, femur_tibia_depan_berdiri = IK_depan(0,0, panjang_depan_belakang, self.roll, 0, self.kurang_tinggi)
         base_coxa_belakang_berdiri, coxa_femur_belakang_berdiri, femur_tibia_belakang_berdiri = IK_belakang(0,0, panjang_depan_belakang, self.roll, 0, self.mundur)
 
         if message.data[2] == 0: #maju
@@ -144,7 +151,7 @@ class MyNode(Node):
                 coxa_femur_tengah_kiri = coxa_femur_tengah_kiri - coxa_femur_tengah_berdiri
                 femur_tibia_tengah_kiri = femur_tibia_tengah_kiri - femur_tibia_tengah_berdiri
 
-                base_coxa_depan_kiri, coxa_femur_depan_kiri, femur_tibia_depan_kiri = IK_depan(forward_kiri_depan_belakang,(yaw), panjang_depan_belakang, self.roll, self.roll)
+                base_coxa_depan_kiri, coxa_femur_depan_kiri, femur_tibia_depan_kiri = IK_depan(forward_kiri_depan_belakang,(yaw), panjang_depan_belakang, self.roll, self.roll, self.kurang_tinggi)
                 base_coxa_depan_kiri = base_coxa_depan_kiri - base_coxa_depan_berdiri
                 coxa_femur_depan_kiri = coxa_femur_depan_kiri - coxa_femur_depan_berdiri
                 femur_tibia_depan_kiri = femur_tibia_depan_kiri - femur_tibia_depan_berdiri
@@ -159,7 +166,7 @@ class MyNode(Node):
                 coxa_femur_tengah_kanan = coxa_femur_tengah_kanan - coxa_femur_tengah_berdiri
                 femur_tibia_tengah_kanan = femur_tibia_tengah_kanan - femur_tibia_tengah_berdiri
 
-                base_coxa_depan_kanan, coxa_femur_depan_kanan, femur_tibia_depan_kanan = IK_depan(forward_kanan_depan_belakang,((-yaw)), panjang_depan_belakang, self.roll, self.roll)
+                base_coxa_depan_kanan, coxa_femur_depan_kanan, femur_tibia_depan_kanan = IK_depan(forward_kanan_depan_belakang,((-yaw)), panjang_depan_belakang, self.roll, self.roll, self.kurang_tinggi)
                 base_coxa_depan_kanan = base_coxa_depan_kanan - base_coxa_depan_berdiri
                 coxa_femur_depan_kanan = coxa_femur_depan_kanan - coxa_femur_depan_berdiri
                 femur_tibia_depan_kanan = femur_tibia_depan_kanan - femur_tibia_depan_berdiri
@@ -169,7 +176,7 @@ class MyNode(Node):
                 coxa_femur_belakang_kanan = coxa_femur_belakang_kanan - coxa_femur_belakang_berdiri
                 femur_tibia_belakang_kanan = femur_tibia_belakang_kanan - femur_tibia_belakang_berdiri
 
-                angle.data = [int(base_coxa_tengah_kiri), int(coxa_femur_tengah_kiri), int(femur_tibia_tengah_kiri), int(base_coxa_depan_kiri), int(coxa_femur_depan_kiri),int(femur_tibia_depan_kiri), int(base_coxa_belakang_kiri), int(coxa_femur_belakang_kiri), int(femur_tibia_belakang_kiri), int(base_coxa_tengah_kanan), int(coxa_femur_tengah_kanan), int(femur_tibia_tengah_kanan), int(base_coxa_depan_kanan), int(coxa_femur_depan_kanan), int(femur_tibia_depan_kanan), int(base_coxa_belakang_kanan), int(coxa_femur_belakang_kanan), int(femur_tibia_belakang_kanan), int(coxa_femur_tengah_berdiri+35), int(femur_tibia_tengah_berdiri-45), int(coxa_femur_depan_berdiri+35), int(femur_tibia_depan_berdiri-45), int(coxa_femur_belakang_berdiri+35), int(femur_tibia_belakang_berdiri-45), self.mundur]
+                angle.data = [int(base_coxa_tengah_kiri), int(coxa_femur_tengah_kiri)*self.flag, int(femur_tibia_tengah_kiri)*self.flag, int(base_coxa_depan_kiri), int(coxa_femur_depan_kiri)*self.flag, int(femur_tibia_depan_kiri)*self.flag, int(base_coxa_belakang_kiri), int(coxa_femur_belakang_kiri)*self.flag, int(femur_tibia_belakang_kiri)*self.flag, int(base_coxa_tengah_kanan), int(coxa_femur_tengah_kanan)*self.flag, int(femur_tibia_tengah_kanan)*self.flag, int(base_coxa_depan_kanan), int(coxa_femur_depan_kanan)*self.flag, int(femur_tibia_depan_kanan)*self.flag, int(base_coxa_belakang_kanan), int(coxa_femur_belakang_kanan)*self.flag, int(femur_tibia_belakang_kanan)*self.flag, int(coxa_femur_tengah_berdiri+35), int(femur_tibia_tengah_berdiri-45), int(coxa_femur_depan_berdiri+35), int(femur_tibia_depan_berdiri-45), int(coxa_femur_belakang_berdiri+35), int(femur_tibia_belakang_berdiri-45), self.mundur]
                 self.get_logger().info(f"Published: {angle.data}")
                 self.get_logger().info("Sending Tripod Angle")
                 self.publish_tripod_angle.publish(angle)

@@ -20,7 +20,7 @@ def wait(waktu):
         elif currentTime - myTime >= waktu:
             flag = False
 
-delay = 0.2
+delay = 0.6
 
 class MyNode(Node):
     def __init__(self):
