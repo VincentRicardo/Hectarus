@@ -432,8 +432,8 @@ class MyNode(Node):
         self.roll = (0.96 * self.gyroAngleX + 0.04 * AccelAngleX)*6.870229
         self.pitch = (0.96 * self.gyroAngleY + 0.04 * AccelAngleY) * 12.85714
 
-        #print("Roll: " + str(self.roll))
-        #print("Yaw: " + str(self.yaww))
+        print("Roll: " + str(self.roll))
+        print("Yaw: " + str(self.yaww))
         #print(" ")
         self.previousTime = self.currentTime
 

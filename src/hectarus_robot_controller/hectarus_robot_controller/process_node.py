@@ -47,16 +47,18 @@ class MyNode(Node):
 
     def ultrasonik_state(self, message = Int32MultiArray):
         self.ultrasonik = [message.data[0], message.data[1], message.data[2], message.data[3], message.data[4], message.data[5], message.data[6]]
-        if self.ultrasonik[0] <= 4 :
+        if self.ultrasonik[0] <= 15 :
             #self.get_logger().info("Ada halangan didepan")
             wait(2)
             state = Int32()
             state.data = 9 #berhenti dulu
             self.publish_state.publish(state) #kirim berhenti
-            wait(5)
+            wait(3)
             state = Int32()
             state.data = 1 # 1 belok kiri atau 2 belok kanan
             self.publish_state.publish(state) #kirim belok
+            wait(1.2)
+            self.publish_state.publish(state)
             wait(1.2)
             self.publish_state.publish(state)
             wait(1.2)
@@ -68,7 +70,7 @@ class MyNode(Node):
         else:
             #self.get_logger().info("Maju")
             state = Int32()
-            state.data = 0 # strafe kiri
+            state.data = 9 # strafe kiri
             self.publish_state.publish(state)
 
 def main(args=None):

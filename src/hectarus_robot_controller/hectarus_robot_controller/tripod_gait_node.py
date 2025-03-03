@@ -20,7 +20,7 @@ def wait(waktu):
         elif currentTime - myTime >= waktu:
             flag = False
 
-delay = 0.6
+#delay = 0.6
 
 class MyNode(Node):
     def __init__(self):
@@ -28,13 +28,15 @@ class MyNode(Node):
         self.subscriber_angle = self.create_subscription(Int32MultiArray, "/tripod_angle_", self.move, 1)
 
     def move(self, message = Int32MultiArray):
+        delay = (0.4*(message.data[16+9])) - 0.2
+#        delay = 2
         #femur 1 3 5 ngangkat
-        kit1.servo[7].angle = max(0, min((message.data[11+9] + 45), 180)) #femur1
-        kit1.servo[6].angle = max(0, min((180 - message.data[12+9] + 45), 180)) #tibia1
-        kit1.servo[1].angle = max(0, min((message.data[13+9] + 45), 180)) #femur3
-        kit1.servo[0].angle = max(0, min((180 - message.data[14+9] + 45), 180)) #tibia3
-        kit2.servo[11].angle = max(0, min((180 - message.data[9+9] - 45), 180)) #femur5
-        kit2.servo[12].angle = max(0, min((message.data[10+9] - 45), 180)) #tibia5
+        kit1.servo[7].angle = max(0, min((message.data[11+9] + 60), 180)) #femur1
+        kit1.servo[6].angle = max(0, min((180 - message.data[12+9] + 60), 180)) #tibia1
+        kit1.servo[1].angle = max(0, min((message.data[13+9] + 60), 180)) #femur3
+        kit1.servo[0].angle = max(0, min((180 - message.data[14+9] + 60), 180)) #tibia3
+        kit2.servo[11].angle = max(0, min((180 - message.data[9+9] - 60), 180)) #femur5
+        kit2.servo[12].angle = max(0, min((message.data[10+9] - 60), 180)) #tibia5
         wait(delay)
 
         #coxa 1 3 5 maju
@@ -48,7 +50,7 @@ class MyNode(Node):
         kit1.servo[6].angle = max(0, min((180 - message.data[12+9] - message.data[5]), 180)) #tibia1
         kit1.servo[0].angle = max(0, min((180 - message.data[14+9] - message.data[8]), 180)) #tibia3
         kit2.servo[12].angle = max(0, min((message.data[10+9] + message.data[2+9]), 180)) #tibia5
-        wait(0.1)
+        wait(0.02)
         kit1.servo[7].angle = max(0, min((message.data[11+9] + message.data[4]), 180)) #femur1
         kit1.servo[1].angle = max(0, min((message.data[13+9] + message.data[7]), 180)) #femur3
         kit2.servo[11].angle = max(0, min((180 - message.data[9+9]- message.data[1+9]), 180)) #femur5
@@ -69,12 +71,12 @@ class MyNode(Node):
 
         wait(0.02)
         #femur 2 4 6 ngangkat
-        kit1.servo[4].angle = max(0, min((message.data[9+9] + 45), 180)) #femur2
-        kit1.servo[3].angle = max(0, min((180 - message.data[10+9] + 45), 180)) #tibia2
-        kit2.servo[14].angle = max(0, min((180 - message.data[13+9] - 45), 180)) #femur4
-        kit2.servo[15].angle = max(0, min((message.data[14+9] - 45), 180)) #tibia4
-        kit2.servo[8].angle = max(0, min((180 - message.data[11+9] - 45), 180)) #femur6
-        kit2.servo[9].angle =  max(0, min((message.data[12+9] - 45), 180)) #tibia6
+        kit1.servo[4].angle = max(0, min((message.data[9+9] + 60), 180)) #femur2
+        kit1.servo[3].angle = max(0, min((180 - message.data[10+9] + 60), 180)) #tibia2
+        kit2.servo[14].angle = max(0, min((180 - message.data[13+9] - 60), 180)) #femur4
+        kit2.servo[15].angle = max(0, min((message.data[14+9] - 60), 180)) #tibia4
+        kit2.servo[8].angle = max(0, min((180 - message.data[11+9] - 60), 180)) #femur6
+        kit2.servo[9].angle =  max(0, min((message.data[12+9] - 60), 180)) #tibia6
         wait(delay)
 
         #coxa 2 4 6 maju
@@ -87,7 +89,7 @@ class MyNode(Node):
         kit1.servo[3].angle = max(0, min((180 - message.data[10+9] - message.data[2]), 180)) #tibia2
         kit2.servo[15].angle = max(0, min((message.data[14+9] + message.data[8+9]), 180)) #tibia4
         kit2.servo[9].angle = max(0, min((message.data[12+9] + message.data[5+9]), 180)) #tibia6
-        wait(0.1)
+        wait(0.02)
         kit1.servo[4].angle = max(0, min((message.data[9+9] + message.data[1]), 180)) #femur2
         kit2.servo[14].angle = max(0, min((180 - message.data[13+9] - message.data[7+9]), 180)) #femur4
         kit2.servo[8].angle = max(0, min((180 - message.data[11+9] - message.data[4+9]), 180)) #femur6
@@ -105,7 +107,9 @@ class MyNode(Node):
         kit2.servo[7].angle = 90 #coxa6
         kit2.servo[8].angle = 180 - message.data[11+9] #femur6
         kit2.servo[9].angle = message.data[12+9] #tibia6
-        wait(0.02)
+        #wait(0.02)
+
+
 
 def main(args=None):
     rclpy.init(args=args)

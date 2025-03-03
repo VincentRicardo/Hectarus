@@ -11,7 +11,7 @@ import numpy as np
 kit1 = ServoKit(channels=16, address=0x41)
 kit2 = ServoKit(channels=16, address=0x40)
 
-delay = 0.2
+#delay = 0.2
 
 def wait(waktu):
     flag = True
@@ -34,6 +34,7 @@ class MyNode(Node):
         data = np.array(message.data).reshape(rows, cols)
         self.get_logger().info(f"Data: {data}")
 
+        delay = (0.4*(data[3][17]))-0.2
         #femur 1 4 angkat
         kit1.servo[7].angle = max(0, min((data[3][4] + 45), 180)) #femur1
         kit2.servo[14].angle = max(0, min((180 - data[3][7] - 45), 180)) #femur4
