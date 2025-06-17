@@ -223,6 +223,25 @@ class MyNode(Node):
 #                    self.publish_count_time.publish(count_time)
 #                    self.stop = 1
                     #end of line#
+
+ #              elif self.jarak[2] < self.jarak[1]:
+ #                   state.data = [2,0] # 1 belok kiri atau 2 belok kanan
+ #                   self.publish_state.publish(state) #kirim belok
+ #                   wait(1.2)
+ #                   self.publish_state.publish(state)
+ #                   wait(1.2)
+ #                   self.publish_state.publish(state)
+ #                   wait(1.2)
+ #                   self.publish_state.publish(state)
+ #                   wait(2)
+ #                   calibrate.data = 1
+ #                   self.trigger_strafe = self.trigger_strafe + 1
+ #                   self.publish_calibrate.publish(calibrate)
+ #                   wait(2)
+ #                   state.data = [9,0]
+ #                   self.publish_state.publish(state)
+ #                   wait(3)
+        
                 else: #kalo logika diatas ga ada yang ketrima, jalan lurus terus, tergantung self trigger_Strafenya, mepetnya ke trigger
                     if self.mode == -2:
                         self.jarak[3] = ultrasonic(TRIG[2],ECHO[2])
