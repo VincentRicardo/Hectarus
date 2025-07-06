@@ -1,10 +1,3 @@
-#mode 0: titik awal start
-#mode -1: robot masuk kondisi setelah belokan pertama
-#mode -2: robot masuk kondisi setelah belokan kedua, kalo ada halangan bakal trigger strafe
-#mode 3: robot masuk kondisi setelah strafe, yaw di koreksi 20 derajat
-#mode -4 & flag == false: kondisi robot belum naik tangga, constraint == 0
-#mode -4 & flag == true: kondisi robot setelah naik tangga, constraint == 30, constraint kiri di ganti
-
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
@@ -54,15 +47,9 @@ def ultrasonic(TRIG, ECHO):
     pulse_start = time.time()
     time_timeout = time.time()
     while GPIO.input(ECHO)==0:
-#        if ((time.time() - time_timeout) *1000) > timeout:
-#            distance = 30
-#            return distance
         pulse_start = time.time()
 
     while GPIO.input(ECHO)==1:
-#        if ((time.time() - time_timeout) *1000) > timeout:
-#            distance = 30
-#            return distance
         pulse_end = time.time()
 
     pulse_duration = pulse_end - pulse_start
@@ -100,31 +87,24 @@ class MyNode(Node):
         self.flag = not self.flag
 
     def process(self):
-        if self.stop == 1: #looping berhenti setelah kelar ngitung
+        if self.stop == 1:
             state = Int32MultiArray()
             state.data = [9,0]
             self.publish_state.publish(state)
             return
-        elif self.stop == 2: #trigger mulai ngitung waktu (buat ambil data)
+        elif self.stop == 2:
             count_time = Int32()
             count_time.data = 1
             self.publish_count_time.publish(count_time)
             self.stop = 0
 
         self.jarak[0] = ultrasonic(TRIG[0], ECHO[0]) #ultrasonic depan
-        if self.flag == True and self.mode == -4: #flag buat ganti detect depan (kondisi setelah naik tangga)
-            self.constraint = -99 #???
+        if self.flag == True and self.mode == -4: 
+            self.constraint = -99
             self.constraint_left = [27,15.5]
             self.add_delay = 0.4
             self.flag = False
             wait(5)
-            #berhenti trus ngeluarin time elapsed#
-#            count_time = Int32()
-#            count_time.data = 1
-#            self.publish_count_time.publish(count_time)
-#            self.stop = 1
-            #end of line#
-#            return
 
         self.get_logger().info("Jarak Depan: " + str(self.jarak[0]))
         self.get_logger().info("Constraint " + str(self.constraint))
@@ -132,14 +112,12 @@ class MyNode(Node):
         state = Int32MultiArray()
         calibrate = Int32()
 
-
         if self.constraint == -99 and self.loop != 3:
             self.loop += 1
         if self.constraint == -99 and self.loop == 3:
             self.constraint = 37
 
-
-        if self.jarak[0] <= self.constraint: #kalo jarak depan lebih kecil dari constraintnya
+        if self.jarak[0] <= self.constraint:
             wait(2)
             state.data = [9,0] #berhenti
             self.publish_state.publish(state)
@@ -169,12 +147,6 @@ class MyNode(Node):
                             correction = Int32()
                             correction.data = 20
                             self.publish_correction.publish(correction)
-                            #berhenti trus ngeluarin time elapsed#
-#                            count_time = Int32()
-#                            count_time.data = 1
-#                            self.publish_count_time.publish(count_time)
-#                            self.stop = 1
-                            #end of line#
                             break
                         elif self.mode == -4: #udah mentok kiri sampai titik finish
                             #looping stop
@@ -185,7 +157,7 @@ class MyNode(Node):
                             self.stop = 1
                             #end of line#
                             break
-            elif self.mode == 3: #setelah selesai bagian 3, yawnya berubah balik, constraintnya diperpendek, rollnya diaktifin
+            elif self.mode == 3:
                 self.constraint = 0
                 flag_data = Int32()
                 flag_data.data = 1
@@ -193,14 +165,9 @@ class MyNode(Node):
                 flag_data.data = 1
                 self.publish_turn_on_roll.publish(flag_data)
                 self.mode = -4
-                #berhenti trus ngeluarin time elapsed#
-#                count_time = Int32()
-#                count_time.data = 1
-#                self.publish_count_time.publish(count_time)
-#                self.stop = 1
-                #end of line#
+
             else:
-                if self.jarak[1] < self.jarak[2] or self.jarak[2] < self.jarak[1]:  #logika belok kiri (harusnya ga ada belok kanan jadinya force belok kiri)
+                if self.jarak[1] < self.jarak[2]:
                     state.data = [1,0] # 1 belok kiri atau 2 belok kanan
                     self.publish_state.publish(state)
                     wait(1.2)
@@ -217,32 +184,27 @@ class MyNode(Node):
                     state.data = [9,0]
                     self.publish_state.publish(state)
                     wait(3)
-                    #berhenti trus ngeluarin time elapsed#
-#                    count_time = Int32()
-#                    count_time.data = 1
-#                    self.publish_count_time.publish(count_time)
-#                    self.stop = 1
-                    #end of line#
 
- #              elif self.jarak[2] < self.jarak[1]:
- #                   state.data = [2,0] # 1 belok kiri atau 2 belok kanan
- #                   self.publish_state.publish(state) #kirim belok
- #                   wait(1.2)
- #                   self.publish_state.publish(state)
- #                   wait(1.2)
- #                   self.publish_state.publish(state)
- #                   wait(1.2)
- #                   self.publish_state.publish(state)
- #                   wait(2)
- #                   calibrate.data = 1
- #                   self.trigger_strafe = self.trigger_strafe + 1
- #                   self.publish_calibrate.publish(calibrate)
- #                   wait(2)
- #                   state.data = [9,0]
- #                   self.publish_state.publish(state)
- #                   wait(3)
+
+               elif self.jarak[2] < self.jarak[1]:
+                    state.data = [2,0] # 1 belok kiri atau 2 belok kanan
+                    self.publish_state.publish(state) #kirim belok
+                    wait(1.2)
+                    self.publish_state.publish(state)
+                    wait(1.2)
+                    self.publish_state.publish(state)
+                    wait(1.2)
+                    self.publish_state.publish(state)
+                    wait(2)
+                    calibrate.data = 1
+                    self.trigger_strafe = self.trigger_strafe + 1
+                    self.publish_calibrate.publish(calibrate)
+                    wait(2)
+                    state.data = [9,0]
+                    self.publish_state.publish(state)
+                    wait(3)
         
-                else: #kalo logika diatas ga ada yang ketrima, jalan lurus terus, tergantung self trigger_Strafenya, mepetnya ke trigger
+                else:
                     if self.mode == -2:
                         self.jarak[3] = ultrasonic(TRIG[2],ECHO[2])
                         self.get_logger().info("Jarak Kanan : " + str(self.jarak[3]))
@@ -269,51 +231,6 @@ class MyNode(Node):
 def main(args=None):
     rclpy.init(args=args)
     node = MyNode()
-    #coxa ke tengah
-#    kit1.servo[8].angle = 90 #coxa1
-#    kit2.servo[7].angle = 90 #coxa6
-#    kit1.servo[5].angle = 90 #coxa2
-#    kit2.servo[10].angle = 90 #coxa5
-#    kit1.servo[2].angle = 90 #coxa3
-#    kit2.servo[13].angle = 90 #coxa4
-#    wait(1)
-    #femur naik
-#    kit1.servo[7].angle = 170 #femur1
-#    kit2.servo[8].angle = 10 #femur6
-#    kit1.servo[4].angle = 170 #femur2
-#    kit2.servo[11].angle = 10 #femur5
-#    kit1.servo[1].angle = 170 #femur3
-#    kit2.servo[14].angle = 10 #femur4
-
-#    kit1.servo[6].angle = 100 #tibia1
-#    kit2.servo[9].angle = 80 #tibia6
-#    kit1.servo[3].angle = 100 #tibia2
-#    kit2.servo[12].angle = 80 #tibia5
-#    kit1.servo[0].angle = 100 #tibia3
-#    kit2.servo[15].angle = 80 #tibia4
-#    wait(0.5)
-    #tibia naik
-#    kit1.servo[6].angle = 180
-#    kit2.servo[9].angle = 0
-#    kit1.servo[3].angle = 180
-#    kit2.servo[12].angle = 0
-#    kit1.servo[0].angle = 180
-#    kit2.servo[15].angle = 0
-#    wait(0.5)
-    #femur turun berdiri + tibia adjust
-#    for i in range (0, 46, 5):
-#        kit1.servo[6].angle = 180 - (i) #tibia1
-#        kit2.servo[9].angle = 0 + (i) #tibia6
-#        kit1.servo[3].angle = 180 - (i) #tibia2
-#        kit2.servo[12].angle = 0 + (i) #tibia5
-#        kit1.servo[0].angle = 180 - (i) #tibia3
-#        kit2.servo[15].angle = 0 + (i) #tibia4
-#        kit1.servo[7].angle = 180 - (i+5) #femur1
-#        kit2.servo[8].angle = 0 + (i+10) #femur6
-#        kit1.servo[4].angle = 180 - (i+5) #femur2
-#        kit2.servo[11].angle = 0 + (i+10) #femur5
-#        kit1.servo[1].angle = 180 - (i+5) #femur3
-#        kit2.servo[14].angle = 0 + (i+10) #femur4
     time.sleep(5)
     GPIO.output(23, GPIO.HIGH)
     node.get_logger().info("System Ready")
