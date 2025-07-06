@@ -11,18 +11,6 @@ import numpy as np
 from ahrs.filters import Madgwick
 from scipy.spatial.transform import Rotation as R
 
-
-'''!
-  @file DFRobot_BMX160.py
-  @brief define DFRobot_BMX160 class infrastructure, the implementation of basic methods
-  @copyright	Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
-  @license     The MIT License (MIT)
-  @author [luoyufeng] (yufeng.luo@dfrobot.com)
-  @maintainer [Fary](feng.yang@dfrobot.com)
-  @version  V1.0
-  @date  2021-10-20
-  @url https://github.com/DFRobot/DFRobot_BMX160
- '''
 import sys
 sys.path.append('../')
 import smbus
