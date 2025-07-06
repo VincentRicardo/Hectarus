@@ -31,8 +31,6 @@ def nilai_h(panjang, derajat, maju, geser, nambah):
 
 
 def IK_tengah(maju, yaw, panjang, roll, geser, nambah):
-#    h_belakang = tibia + (math.tan(math.radians(abs(min(roll,15))))*panjang_depan_belakang/2)
-#    h_tengah = ((panjang_depan_belakang/2)/panjang_depan_belakang)*h_belakang
     h,l = nilai_h(panjang, abs(roll), maju, geser, nambah)
     P = math.sqrt(math.pow(maju,2)+math.pow((l+coxa),2)-(2*maju*(l+coxa)*math.cos(math.radians(90-(yaw))))) #panjang diagonal setelah kaki maju
     sudut_base_coxa_tengah = math.degrees(math.acos((math.pow((l+coxa),2)+math.pow(P,2)-math.pow(maju,2))/(2*(l+coxa)*P)))
@@ -103,10 +101,10 @@ class MyNode(Node):
         self.forward = 4
         self.delay = 1
         self.mepet = 0
-        self.flag_stop_tangga = 0 #0
-        self.roll_flag = 0 #0
+        self.flag_stop_tangga = 0
+        self.roll_flag = 0 
         self.tambah_tinggi_kaki_tengah = 0
-#        self.roll_kaki_kiri = 0
+
 
 
     def move(self, message = Int32MultiArray):
@@ -221,7 +219,6 @@ class MyNode(Node):
 
                 angle.data = [int(base_coxa_tengah_kiri), int(coxa_femur_tengah_kiri)*self.flag, int(femur_tibia_tengah_kiri)*self.flag, int(base_coxa_depan_kiri), int(coxa_femur_depan_kiri)*self.flag, int(femur_tibia_depan_kiri)*self.flag, int(base_coxa_belakang_kiri), int(coxa_femur_belakang_kiri)*self.flag, int(femur_tibia_belakang_kiri)*self.flag, int(base_coxa_tengah_kanan), int(coxa_femur_tengah_kanan)*self.flag, int(femur_tibia_tengah_kanan)*self.flag, int(base_coxa_depan_kanan), int(coxa_femur_depan_kanan)*self.flag, int(femur_tibia_depan_kanan)*self.flag, int(base_coxa_belakang_kanan), int(coxa_femur_belakang_kanan)*self.flag, int(femur_tibia_belakang_kanan)*self.flag, int(coxa_femur_tengah_berdiri+35), int(femur_tibia_tengah_berdiri-45), int(coxa_femur_depan_berdiri+35), int(femur_tibia_depan_berdiri-45), int(coxa_femur_belakang_berdiri+35), int(femur_tibia_belakang_berdiri-45), self.mundur, self.delay]
                 if self.flag == 0:
-                #    angle.data = [int(30), int(0), int(0), int(30), int(0), int(0), int(25), int(0), int(0), int(20), int(0), int(0), int(21), int(0), int(0), int(21), int(0), int(0), int(coxa_femur_tengah_berdiri+35), int(femur_tibia_tengah_berdiri-45), int(coxa_femur_depan_berdiri+35), int(femur_tibia_depan_berdiri-45), int(coxa_femur_belakang_berdiri+35), int(femur_tibia_belakang_berdiri-45), self.mundur, self.delay]
                     angle.data = [int(base_coxa_tengah_kiri*1.521739), int(0), int(0), int(base_coxa_depan_kiri*2.30769), int(0), int(0), int(base_coxa_belakang_kiri*0.8323), int(0), int(0), int(base_coxa_tengah_kanan*1.221739), int(0), int(0), int(base_coxa_depan_kanan*1.230769), int(0), int(0), int(base_coxa_belakang_kanan*1.04176), int(0), int(0), int(coxa_femur_tengah_berdiri+35), int(femur_tibia_tengah_berdiri-45), int(coxa_femur_depan_berdiri+35), int(femur_tibia_depan_berdiri-45), int(coxa_femur_belakang_berdiri+35), int(femur_tibia_belakang_berdiri-45), self.mundur, self.delay]
                 self.get_logger().info(f"Published: {angle.data}")
                 self.get_logger().info("Sending Tripod Angle")
@@ -230,7 +227,6 @@ class MyNode(Node):
             if gait == 1: #wave
                 angle = Int32MultiArray()
                 step_wave = [forward_kiri_depan_belakang, forward_kiri_tengah, forward_kanan_depan_belakang, forward_kanan_tengah]
-#                self.get_logger().info(f"Step_wave: {step_wave}")
                 decrement_wave = [0,0,0,0]
                 angle_temp = np.zeros((7,18), dtype = int)
                 self.mepet = self.mepet * 1
