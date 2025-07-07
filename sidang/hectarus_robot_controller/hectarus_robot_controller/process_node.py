@@ -186,7 +186,7 @@ class MyNode(Node):
                     wait(3)
 
 
-               elif self.jarak[2] < self.jarak[1]:
+                elif self.jarak[2] < self.jarak[1]:
                     state.data = [2,0] # 1 belok kiri atau 2 belok kanan
                     self.publish_state.publish(state) #kirim belok
                     wait(1.2)
