@@ -1,1 +1,1 @@
-Hectarus 3D file f3z: https://drive.google.com/file/d/17IvvntpFAfDsmgkXhej5OwAJW7KJta5m/view?usp=sharing
+Hectarus 3D file f3z: https://drive.google.com/drive/folders/1Z10uJXDSq4DjLYr3NKijFEwZqnF0ocAD?usp=sharing
