@@ -17,6 +17,3 @@ Desain pada PCB dilakukan perubahan pada tegangan input VCC PCA9685 yang diharus
 
 Wiring untuk setiap servo pada PCA9685 dapat dilihat pada gambar dibawah.
 <img width="1297" height="410" alt="image" src="https://github.com/user-attachments/assets/a1ba629f-1db1-4272-8d56-4723c8ec7c42" />
-
-
-<img width="1297" height="410" alt="image" src="https://github.com/user-attachments/assets/5cd5afbb-cbf2-4b0a-bf16-ec9dc051f6bd" />
