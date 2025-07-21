@@ -24,8 +24,11 @@ Password: hectarus123
 
 CATATAN: Selalu update dan upgrade ketika mengaktifkan Raspberry Pi setiap harinya.
 Update = sudo apt upgrade
+
 Upgrade = sudo apt full-upgrade -y
+
 Update & Upgrade sekaligus = sudo apt update && sudo apt full-upgrade -y
+
 Jika jarang dilakukan update & upgrade, terkadang akan mempengaruhi program yang ada pada Raspberry Pi
 
 
