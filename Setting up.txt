@@ -1,4 +1,0 @@
-Akses Raspberry Pi 4B:
-Note: Jika sebelum setting up ini dilakukan wifi Bengkel dilakukan perubahan (happus address atau ganti password), maka akses Raspberry Pi 4B perlu dilakukan secara manual (Lompat ke bagian Setting Up Manual).
-
-1. Pastikan Raspberry Pi 4B menyala
