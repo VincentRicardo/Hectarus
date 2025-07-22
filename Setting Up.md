@@ -60,9 +60,14 @@ Terdapat beberapa file yang bisa di-run.
 
 
 INISIASI PROGRAM PERGERAKAN HECTARUS DIATAS ARENA
+1. Running program python Hectarus untuk berada dalam kondisi berdiri dengan "python3 servo_langsung_berdiri2.py"
+2. Untuk memulai program robot Hectarus di atas arena, posisikan robot Hectarus diletakkan di atas arena di posisi start dengan tegak lurus kedepan
+3. Pada powershell (Windows) atau terminal (Ubuntu), masukkan "ros2 launch hectarus_robot_controller all.launch.py" + enter
+4. Tunggu sampai lampu LED indikator pada belakang robot Hectarus menyala hijau, tekan tombol hijau untuk memicu mulainya pergerakan robot Hectarus.
+5. Untuk menghentikan program, gunakan ctrl + C.
+6. Jika koneksi Powershell terputus, langsung matikan robot Hectarus pada saklar bagian belakang robot.
 
-1. Untuk memulai program robot Hectarus di atas arena, posisikan robot Hectarus diletakkan di atas arena di posisi start dengan tegak lurus kedepan
-2. Pada powershell (Windows) atau terminal (Ubuntu), masukkan "ros2 launch hectarus_robot_controller all.launch.py" + enter
-3. Tunggu sampai lampu LED indikator pada belakang robot Hectarus menyala hijau, tekan tombol hijau untuk memicu mulainya pergerakan robot Hectarus.
-4. Untuk menghentikan program, gunakan ctrl + C.
-5. Jika koneksi Powershell terputus, langsung matikan robot Hectarus pada saklar bagian belakang robot.
+Tips:
+1. Untuk menulis suatu file atau program, bisa dengan menekan tab untuk shortcut penulisan. misalkan "python3 servo_la" + tab maka akan langsung tertulis "python3 servo_langsung_berdiri"
+Contoh lain: "ros2 launch hec" + tab -> "ros2 launch hectarus_" + r + tab -> "ros2 launch hectarus_robot_controller" + a + tab -> "ros2 launch hectarus_robot_controller all.launch.py"
+2. Untuk memulai program yang sudah diprogram sebelumnya, supaya tidak perlu mengetik ulang, tekan tombol arrow atas.
