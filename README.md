@@ -1,7 +1,9 @@
 Dokumentasi Pengerjaan Robot Hectarus.
 
 Video Robot di atas arena: https://drive.google.com/file/d/1sRExtcOABG7I-CsqIuhkuixOlNEsiTaz/view?usp=drive_link
-Hectarus 3D file f3z dan Dokumentasi Pengembangan Robot: 
+
+Hectarus 3D file f3z dan Dokumentasi Pengembangan Robot: https://multimedianusantara-my.sharepoint.com/:f:/g/personal/vincent_ricardo_student_umn_ac_id/EgrRIMbVpdlOorctNDfITKUBHUXIWfgVi5hWtPaL_RXrBg
+
 Pada File README, dilampirkan file .f3z yang berisikan desian komponen dan link yang pada robot Hectarus. Desain yang dilampir juga terdapat desain end-effector yang terbaru berdasarkan saran atau masukan dalam pembuatan robot ini.
 
 <img width="897" height="451" alt="image" src="https://github.com/user-attachments/assets/eb6eda54-e29c-4def-b930-cb8061e33add" />
