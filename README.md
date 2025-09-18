@@ -11,8 +11,9 @@ Pada File README, dilampirkan file .f3z yang berisikan desian komponen dan link 
 
 ## Wiring
 Pada Folder Wiring, dilampirkan folder zip yang berisikan file desain PCB. 
-Catatan:
-Desain pada PCB dilakukan perubahan pada tegangan input VCC PCA9685 yang diharuskan untuk melakukan jumper pada pin 3.3 Volt Raspberry Pi ke pin VCC PCA9685 secara manual.
+
+***Catatan:
+Desain pada PCB dilakukan perubahan pada tegangan input VCC PCA9685 yang diharuskan untuk melakukan jumper pada pin 3.3 Volt Raspberry Pi ke pin VCC PCA9685 secara manual.***
 
 <img width="546" height="525" alt="image" src="https://github.com/user-attachments/assets/09f28eb9-7376-44e2-8ab9-19ad1326dc35" />
 
