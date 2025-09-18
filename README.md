@@ -1,4 +1,5 @@
-Dokumentasi Pengerjaan Robot Hectarus.
+# Dokumentasi Pengerjaan Robot Hectarus.
+Repository ini merupakan dokumentasi pengerjaan robot berkaki enam Hectarus
 
 Video Robot di atas arena: https://drive.google.com/file/d/1sRExtcOABG7I-CsqIuhkuixOlNEsiTaz/view?usp=drive_link
 
@@ -8,7 +9,7 @@ Pada File README, dilampirkan file .f3z yang berisikan desian komponen dan link 
 
 <img width="897" height="451" alt="image" src="https://github.com/user-attachments/assets/eb6eda54-e29c-4def-b930-cb8061e33add" />
 
-Wiring:
+## Wiring
 Pada Folder Wiring, dilampirkan folder zip yang berisikan file desain PCB. 
 Catatan:
 Desain pada PCB dilakukan perubahan pada tegangan input VCC PCA9685 yang diharuskan untuk melakukan jumper pada pin 3.3 Volt Raspberry Pi ke pin VCC PCA9685 secara manual.
